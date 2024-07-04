@@ -1,0 +1,26 @@
+export const reportsMenu = [
+  { route: "", title: "Sales" },
+  { route: "purchase", title: "Purchase" },
+  { route: "sales-return", title: "Sales Return" },
+  { route: "purchase-return", title: "Purchase Return" },
+  // { route: "transactions", title: "All Transactions" },
+  { route: "due", title: "Due List" },
+  { route: "due-collection", title: "Due Collection" },
+  { route: "loss-profit", title: "Loss & Profit" },
+  { route: "ledger", title: "Ledger" },
+  // { route: "daily-collection", title: "Daily Collection " },
+  // { route: "cashflow  ", title: "Cashflow" },
+  // { route: "parties", title: "All Parties" },
+  { route: "party-statement", title: "Party Statement" },
+  // { route: "stock", title: "Stock" },
+  { route: "income", title: "Income" },
+  // {
+  //   route: "income-category",
+  //   title: "Income Category",
+  // },
+  { route: "expense", title: "Expense" },
+  // {
+  //   route: "expense-category",
+  //   title: "Expense Category",
+  // },
+];
