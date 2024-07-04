@@ -25,12 +25,16 @@ import {
   useMultiDeleteWarehouseTransferMutation,
 } from "../../../redux/features/warehouse/warehouseTransferApi";
 
+import { useSelector } from "react-redux";
 import WarehouseFilterTabs from "../WarehouseFilterTabs";
 
 const StockTransferList = () => {
   document.title = "Warehouse Transfer List";
   const [deleteId, setDeleteId] = useState(0);
   const [error, setError] = useState("");
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -111,9 +115,9 @@ const StockTransferList = () => {
       "Total Qty": `${getNumberWithCommas(
         twoDigitFixed(data?.quantity)
       )} (Free ${getNumberWithCommas(twoDigitFixed(data?.free_quantity))})`,
-      "Stock value": `$${getNumberWithCommas(
-        twoDigitFixed(data?.amount || 0)
-      )}`,
+      "Stock value": `${
+        currencySymbol + getNumberWithCommas(twoDigitFixed(data?.amount || 0))
+      }`,
     })
   );
 
@@ -218,10 +222,10 @@ const StockTransferList = () => {
                             )
                           </td>
                           <td className="text-center">
-                            $
-                            {getNumberWithCommas(
-                              twoDigitFixed(data?.amount || 0)
-                            )}
+                            {currencySymbol +
+                              getNumberWithCommas(
+                                twoDigitFixed(data?.amount || 0)
+                              )}
                           </td>
                           <td className="print-d-none">
                             <div className="dropdown shoplist-dropdown">

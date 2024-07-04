@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import eyeIcon from "../../../assets/images/actions/eye.svg";
 import moneyMillsReceiveIcon from "../../../assets/images/actions/money-bill-receive.svg";
@@ -27,6 +27,9 @@ const DueList = () => {
   const [partyType, setPartyType] = useState("");
   const [partyInfo, setPartyInfo] = useState({});
   const dispatch = useDispatch();
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -92,9 +95,10 @@ const DueList = () => {
   const tableData = dueData?.data["due-list"]?.map((data) => ({
     Name: data?.name,
     "Party Type": partyTypeMap[data?.party_type],
-    "Total Due": `$${getNumberWithCommas(
-      twoDigitFixed(data?.party_total_due || 0)
-    )}`,
+    "Total Due": `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.party_total_due || 0))
+    }`,
     "Due Date":
       (data?.sales?.[0]?.due_date &&
         getMonthDayYearFormat(data.sales[0].due_date)) ||
@@ -132,37 +136,37 @@ const DueList = () => {
             <div className="total-count-area mt-2">
               <div className="count-item light-red">
                 <h5>
-                  $
-                  {getNumberWithCommas(
-                    twoDigitFixed(dueData?.data?.["retailer-due"] || 0)
-                  )}
+                  {currencySymbol +
+                    getNumberWithCommas(
+                      twoDigitFixed(dueData?.data?.["retailer-due"] || 0)
+                    )}
                 </h5>
                 <p>Retailer</p>
               </div>
               <div className="count-item light-blue-sm">
                 <h5>
-                  $
-                  {getNumberWithCommas(
-                    twoDigitFixed(dueData?.data?.["dealer-due"] || 0)
-                  )}
+                  {currencySymbol +
+                    getNumberWithCommas(
+                      twoDigitFixed(dueData?.data?.["dealer-due"] || 0)
+                    )}
                 </h5>
                 <p>Dealer</p>
               </div>
               <div className="count-item light-green">
                 <h5>
-                  $
-                  {getNumberWithCommas(
-                    twoDigitFixed(dueData?.data?.["wholesaler-due"] || 0)
-                  )}
+                  {currencySymbol +
+                    getNumberWithCommas(
+                      twoDigitFixed(dueData?.data?.["wholesaler-due"] || 0)
+                    )}
                 </h5>
                 <p>Wholesaler</p>
               </div>
               <div className="count-item light-blue">
                 <h5>
-                  $
-                  {getNumberWithCommas(
-                    twoDigitFixed(dueData?.data?.["supplier-due"] || 0)
-                  )}
+                  {currencySymbol +
+                    getNumberWithCommas(
+                      twoDigitFixed(dueData?.data?.["supplier-due"] || 0)
+                    )}
                 </h5>
                 <p>Supplier</p>
               </div>
@@ -241,7 +245,8 @@ const DueList = () => {
 
                         <td>{partyTypeMap[data?.party_type] || ""}</td>
                         <td className="text-center text-orange">
-                          ${getNumberWithCommas(twoDigitFixed(data?.totalDue))}
+                          {currencySymbol +
+                            getNumberWithCommas(twoDigitFixed(data?.totalDue))}
                         </td>
                         <td>
                           {(data?.invoiceList?.length > 0 &&

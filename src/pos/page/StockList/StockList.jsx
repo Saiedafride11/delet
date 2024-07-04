@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Pagination from "../../components/common/Pagination";
 import SerialNumberWithoutCheckbox from "../../components/common/SerialNumberWithoutCheckbox";
 import TableTopPageFilter from "../../components/common/TableTopPageFilter";
@@ -13,6 +14,9 @@ import { useGetProductsQuery } from "../../redux/features/products/products/prod
 
 const StockList = () => {
   document.title = "Stock List";
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -43,20 +47,26 @@ const StockList = () => {
     Stock: `${getNumberWithCommas(
       twoDigitFixed(data.quantity)
     )} (Free ${getNumberWithCommas(twoDigitFixed(data?.free_quantity))})`,
-    "Purchase price": `$${getNumberWithCommas(
-      twoDigitFixed(
-        Math.max(...data?.product_stocks?.map((item) => item.purchase_price))
+    "Purchase price": `${
+      currencySymbol +
+      getNumberWithCommas(
+        twoDigitFixed(
+          Math.max(...data?.product_stocks?.map((item) => item.purchase_price))
+        )
       )
-    )}`,
-    Total: `$${getNumberWithCommas(
-      twoDigitFixed(
-        Math.max(
-          ...data?.product_stocks?.map(
-            (item) => item.purchase_price * data?.quantity
+    }`,
+    Total: `${
+      currencySymbol +
+      getNumberWithCommas(
+        twoDigitFixed(
+          Math.max(
+            ...data?.product_stocks?.map(
+              (item) => item.purchase_price * data?.quantity
+            )
           )
         )
       )
-    )}`,
+    }`,
     Status:
       data?.quantity <=
       data?.product_stocks?.reduce((acc, curr) =>
@@ -81,13 +91,13 @@ const StockList = () => {
             <div className="total-count-area mt-2">
               <div className="count-item light-blue">
                 <h5>
-                  $
-                  {getNumberWithCommas(
-                    twoDigitFixed(
-                      productsData?.data?.["product-info"]
-                        ?.total_purchase_price || 0
-                    )
-                  )}
+                  {currencySymbol +
+                    getNumberWithCommas(
+                      twoDigitFixed(
+                        productsData?.data?.["product-info"]
+                          ?.total_purchase_price || 0
+                      )
+                    )}
                 </h5>
                 <p>Stock Value</p>
               </div>
@@ -169,28 +179,29 @@ const StockList = () => {
                           )
                         </td>
                         <td>
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(
-                              Math.max(
-                                ...data?.product_stocks?.map(
-                                  (item) => item.purchase_price
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(
+                                Math.max(
+                                  ...data?.product_stocks?.map(
+                                    (item) => item.purchase_price
+                                  )
                                 )
                               )
-                            )
-                          )}
+                            )}
                         </td>
                         <td>
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(
-                              Math.max(
-                                ...data?.product_stocks?.map(
-                                  (item) => item.purchase_price * data?.quantity
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(
+                                Math.max(
+                                  ...data?.product_stocks?.map(
+                                    (item) =>
+                                      item.purchase_price * data?.quantity
+                                  )
                                 )
                               )
-                            )
-                          )}
+                            )}
                         </td>
                         <td className="text-red">
                           {data?.quantity <=

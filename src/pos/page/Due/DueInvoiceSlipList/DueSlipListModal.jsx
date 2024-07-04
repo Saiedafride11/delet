@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getMonthDayYearFormat } from "../../../components/function/getMonthDayYearFormat";
 import { useGetInvoiceSlipListQuery } from "../../../redux/features/due/dueApi";
 
-const DueSlipListModal = ({ slipInfo, setSlipInfo }) => {
+const DueSlipListModal = ({ slipInfo, setSlipInfo, currencySymbol }) => {
   const {
     data: slipData,
     isLoading,
@@ -71,7 +71,9 @@ const DueSlipListModal = ({ slipInfo, setSlipInfo }) => {
                         <td>{index < 9 ? `0${index + 1}` : index + 1}</td>
                         <td>{getMonthDayYearFormat(data?.collect_date)}</td>
                         <td>#{data?.prefix + data?.invoice}</td>
-                        <td className="text-center">${data?.amount}</td>
+                        <td className="text-center">
+                          {currencySymbol + data?.amount}
+                        </td>
                         <td className="text-start">
                           <Link
                             to={`${

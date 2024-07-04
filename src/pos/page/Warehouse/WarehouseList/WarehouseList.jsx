@@ -17,6 +17,7 @@ import TableTopButtons from "../../../components/utils/TableTopButtons/TableTopB
 import useSingleDataDelete from "../../../hooks/useSingleDataDelete";
 import useStatusChange from "../../../hooks/useStatusChange";
 
+import { useSelector } from "react-redux";
 import PaginationLocal from "../../../components/common/PaginationLocal";
 import SerialNumber from "../../../components/common/SerialNumber";
 import TableTopSearchLocal from "../../../components/common/TableTopSearchLocal";
@@ -36,6 +37,9 @@ const WarehouseList = () => {
   const [deleteId, setDeleteId] = useState(0);
   const [error, setError] = useState("");
   const [updateData, setUpdateData] = useState({});
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -144,9 +148,10 @@ const WarehouseList = () => {
     Product: `${getNumberWithCommas(
       twoDigitFixed(data?.total_product)
     )} (Free ${getNumberWithCommas(twoDigitFixed(data?.total_free_product))})`,
-    "Stock value": `$${getNumberWithCommas(
-      twoDigitFixed(data?.purchase_product_value)
-    )}`,
+    "Stock value": `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.purchase_product_value))
+    }`,
   }));
 
   return (
@@ -254,10 +259,10 @@ const WarehouseList = () => {
                           )
                         </td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.purchase_product_value)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.purchase_product_value)
+                            )}
                         </td>
                         <td>
                           <StatusSwitch
@@ -335,7 +340,10 @@ const WarehouseList = () => {
         </div>
       </div>
 
-      <WarehouseListViewModal updateData={updateData} />
+      <WarehouseListViewModal
+        updateData={updateData}
+        currencySymbol={currencySymbol}
+      />
       <ProductWarehouseModal
         updateData={updateData}
         setUpdateData={setUpdateData}

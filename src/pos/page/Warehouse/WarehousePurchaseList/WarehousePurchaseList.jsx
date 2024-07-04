@@ -7,6 +7,7 @@ import TableNoData from "../../../components/ui/NoData/TableNoData";
 import LineLoader from "../../../components/ui/Spinner/LineLoader";
 import TableTopButtons from "../../../components/utils/TableTopButtons/TableTopButtons";
 
+import { useSelector } from "react-redux";
 import Pagination from "../../../components/common/Pagination";
 import SerialNumberWithoutCheckbox from "../../../components/common/SerialNumberWithoutCheckbox";
 import TableTopSearch from "../../../components/common/TableTopSearch";
@@ -18,6 +19,9 @@ import WarehouseHistoryFilterTabs from "../WarehouseHistotyFilterTabs";
 const WarehousePurchaseList = () => {
   document.title = "Warehouse Purchase List";
   const { warehouseId } = useParams();
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -49,13 +53,18 @@ const WarehousePurchaseList = () => {
     Date: getMonthDayYearFormat(data?.purchase?.purchase_date),
     Invoice: data?.purchase?.prefix + data?.purchase?.invoice,
     "Party Name": data?.purchase?.party?.name,
-    "Bill amount": `$${getNumberWithCommas(
-      twoDigitFixed(data?.purchase?.grand_total)
-    )}`,
-    Paid: `$${getNumberWithCommas(twoDigitFixed(data?.purchase?.paid_amount))}`,
-    Due: `$${getNumberWithCommas(
-      twoDigitFixed(data?.purchase?.payable_due_amount)
-    )}`,
+    "Bill amount": `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.purchase?.grand_total))
+    }`,
+    Paid: `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.purchase?.paid_amount))
+    }`,
+    Due: `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.purchase?.payable_due_amount))
+    }`,
     "Payment Type": data?.purchase?.payment_type?.name,
     "Purchase by": data?.purchase?.user?.name,
   }));
@@ -144,22 +153,22 @@ const WarehousePurchaseList = () => {
                         </td>
                         <td>{data?.purchase?.party?.name}</td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.purchase?.grand_total)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.purchase?.grand_total)
+                            )}
                         </td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.purchase?.paid_amount)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.purchase?.paid_amount)
+                            )}
                         </td>
                         <td className="text-center text-orange">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.purchase?.payable_due_amount)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.purchase?.payable_due_amount)
+                            )}
                         </td>
                         <td className="text-center">
                           {data?.purchase?.payment_type?.name}

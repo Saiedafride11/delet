@@ -2,7 +2,7 @@ import React from "react";
 import { getNumberWithCommas } from "../../../components/function/getNumberWithCommas";
 import { twoDigitFixed } from "../../../components/function/twoDigitFixed";
 
-const WarehouseListViewModal = ({ updateData }) => {
+const WarehouseListViewModal = ({ updateData, currencySymbol }) => {
   // console.log("updateData", updateData);
 
   return (
@@ -76,9 +76,10 @@ const WarehouseListViewModal = ({ updateData }) => {
                 <li>
                   <span>Stock value</span> <span>:</span>
                   <strong>
-                    {getNumberWithCommas(
-                      twoDigitFixed(updateData?.purchase_product_value)
-                    )}
+                    {currencySymbol +
+                      getNumberWithCommas(
+                        twoDigitFixed(updateData?.purchase_product_value)
+                      )}
                   </strong>
                 </li>
               </ul>

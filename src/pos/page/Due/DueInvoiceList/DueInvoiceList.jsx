@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import eyeIcon from "../../../assets/images/actions/eye.svg";
 import moneyMillsReceiveIcon from "../../../assets/images/actions/money-bill-receive.svg";
@@ -24,6 +24,9 @@ const DueInvoiceList = () => {
   const [searchText, setSearchText] = useState("");
   const [slipInfo, setSlipInfo] = useState({});
   const dispatch = useDispatch();
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -80,11 +83,19 @@ const DueInvoiceList = () => {
   const tableData = newDueInvoiceData?.map((data) => ({
     Date: getMonthDayYearFormat(data?.sale_date || data?.purchase_date),
     Invoice: data?.prefix + data?.invoice,
-    Total: `$${getNumberWithCommas(twoDigitFixed(data?.grand_total))}`,
-    Paid: `$${getNumberWithCommas(
-      twoDigitFixed(data?.grand_total - data?.payable_due_amount)
-    )}`,
-    Due: `$${getNumberWithCommas(twoDigitFixed(data?.payable_due_amount))}`,
+    Total: `${
+      currencySymbol + getNumberWithCommas(twoDigitFixed(data?.grand_total))
+    }`,
+    Paid: `${
+      currencySymbol +
+      getNumberWithCommas(
+        twoDigitFixed(data?.grand_total - data?.payable_due_amount)
+      )
+    }`,
+    Due: `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.payable_due_amount))
+    }`,
     "Payment Method": data?.payment_type?.name,
     "Due Date":
       data?.due_date === null ? "" : getMonthDayYearFormat(data?.due_date),
@@ -117,8 +128,9 @@ const DueInvoiceList = () => {
             <div className="total-count-area mt-2">
               <div className="count-item light-red">
                 <h5>
-                  $
-                  {dueInvoiceData?.data["due-list"]?.sales?.length > 0
+                  {currencySymbol +
+                    dueInvoiceData?.data["due-list"]?.sales?.length >
+                  0
                     ? getNumberWithCommas(
                         twoDigitFixed(dueInvoiceData?.data?.["sale-due"] || 0)
                       )
@@ -215,25 +227,25 @@ const DueInvoiceList = () => {
                           {data?.prefix + data?.invoice}
                         </td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.grand_total)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.grand_total)
+                            )}
                         </td>
                         {/* <td>${data?.paid_amount}</td> */}
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(
-                              data?.grand_total - data?.payable_due_amount
-                            )
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(
+                                data?.grand_total - data?.payable_due_amount
+                              )
+                            )}
                         </td>
                         <td className="text-center text-orange">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.payable_due_amount)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.payable_due_amount)
+                            )}
                         </td>
                         <td className="text-center">
                           {data?.payment_type?.name}
@@ -303,7 +315,11 @@ const DueInvoiceList = () => {
       </div>
 
       <CollectPaymentModal partyId={partyId} />
-      <DueSlipListModal slipInfo={slipInfo} setSlipInfo={setSlipInfo} />
+      <DueSlipListModal
+        slipInfo={slipInfo}
+        setSlipInfo={setSlipInfo}
+        currencySymbol={currencySymbol}
+      />
     </div>
   );
 };

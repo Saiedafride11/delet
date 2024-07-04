@@ -7,6 +7,7 @@ import TableNoData from "../../../components/ui/NoData/TableNoData";
 import LineLoader from "../../../components/ui/Spinner/LineLoader";
 import TableTopButtons from "../../../components/utils/TableTopButtons/TableTopButtons";
 
+import { useSelector } from "react-redux";
 import Pagination from "../../../components/common/Pagination";
 import SerialNumberWithoutCheckbox from "../../../components/common/SerialNumberWithoutCheckbox";
 import TableTopSearch from "../../../components/common/TableTopSearch";
@@ -18,6 +19,9 @@ import WarehouseHistoryFilterTabs from "../WarehouseHistotyFilterTabs";
 const WarehouseSalesList = () => {
   document.title = "Warehouse Sales List";
   const { warehouseId } = useParams();
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -49,13 +53,18 @@ const WarehouseSalesList = () => {
     Date: getMonthDayYearFormat(data?.sale?.sale_date),
     Invoice: data?.sale?.prefix + data?.sale?.invoice,
     "Party Name": data?.sale?.party?.name,
-    "Bill amount": `$${getNumberWithCommas(
-      twoDigitFixed(data?.sale?.grand_total)
-    )}`,
-    Paid: `$${getNumberWithCommas(twoDigitFixed(data?.sale?.paid_amount))}`,
-    Due: `$${getNumberWithCommas(
-      twoDigitFixed(data?.sale?.payable_due_amount)
-    )}`,
+    "Bill amount": `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.sale?.grand_total))
+    }`,
+    Paid: `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.sale?.paid_amount))
+    }`,
+    Due: `${
+      currencySymbol +
+      getNumberWithCommas(twoDigitFixed(data?.sale?.payable_due_amount))
+    }`,
     "Payment Type": data?.sale?.payment_type?.name,
     "Sales by": data?.sale?.user?.name,
   }));
@@ -142,22 +151,22 @@ const WarehouseSalesList = () => {
                         </td>
                         <td>{data?.sale?.party?.name}</td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.sale?.grand_total)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.sale?.grand_total)
+                            )}
                         </td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.sale?.paid_amount)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.sale?.paid_amount)
+                            )}
                         </td>
                         <td className="text-center text-orange">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.sale?.payable_due_amount)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.sale?.payable_due_amount)
+                            )}
                         </td>
                         <td className="text-center">
                           {data?.sale?.payment_type?.name}

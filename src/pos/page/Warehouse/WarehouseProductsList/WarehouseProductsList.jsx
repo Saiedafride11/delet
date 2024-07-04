@@ -7,6 +7,7 @@ import TableNoData from "../../../components/ui/NoData/TableNoData";
 import LineLoader from "../../../components/ui/Spinner/LineLoader";
 import TableTopButtons from "../../../components/utils/TableTopButtons/TableTopButtons";
 
+import { useSelector } from "react-redux";
 import Pagination from "../../../components/common/Pagination";
 import SerialNumberWithoutCheckbox from "../../../components/common/SerialNumberWithoutCheckbox";
 import TableTopSearch from "../../../components/common/TableTopSearch";
@@ -17,6 +18,9 @@ import WarehouseHistoryFilterTabs from "../WarehouseHistotyFilterTabs";
 const WarehouseProductsList = () => {
   document.title = "Warehouse Products";
   const { warehouseId } = useParams();
+  const currencySymbol = useSelector(
+    (state) => state?.settings?.globalCurrencies?.symbol
+  );
 
   // -----------------------------------------------
   // All Data Show
@@ -49,10 +53,12 @@ const WarehouseProductsList = () => {
     Category: data?.product?.product_category?.name,
     "Current Stock": `${data?.quantity} Pcs`,
     "Free Qty": `${data?.free_quantity} Pcs`,
-    "Sale Price": `$${getNumberWithCommas(twoDigitFixed(data?.sale_price))}`,
-    "Purchase Price": `$${getNumberWithCommas(
-      twoDigitFixed(data?.purchase_price)
-    )}`,
+    "Sale Price": `${
+      currencySymbol + getNumberWithCommas(twoDigitFixed(data?.sale_price))
+    }`,
+    "Purchase Price": `${
+      currencySymbol + getNumberWithCommas(twoDigitFixed(data?.purchase_price))
+    }`,
   }));
 
   return (
@@ -135,14 +141,16 @@ const WarehouseProductsList = () => {
                         <td>{data?.quantity} Pcs</td>
                         <td>{data?.free_quantity} Pcs</td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(twoDigitFixed(data?.sale_price))}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.sale_price)
+                            )}
                         </td>
                         <td className="text-center">
-                          $
-                          {getNumberWithCommas(
-                            twoDigitFixed(data?.purchase_price)
-                          )}
+                          {currencySymbol +
+                            getNumberWithCommas(
+                              twoDigitFixed(data?.purchase_price)
+                            )}
                         </td>
                       </tr>
                     ))
